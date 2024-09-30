@@ -9,5 +9,4 @@ public class AlgatransitoApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AlgatransitoApiApplication.class, args);
 	}
-
 }
