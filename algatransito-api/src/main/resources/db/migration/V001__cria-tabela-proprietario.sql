@@ -1,0 +1,8 @@
+CREATE TABLE proprietario (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nome VARCHAR(60) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    telefone VARCHAR(11) NOT NULL
+);
+
+ALTER TABLE proprietario ADD CONSTRAINT uk_proprietario UNIQUE (email);
