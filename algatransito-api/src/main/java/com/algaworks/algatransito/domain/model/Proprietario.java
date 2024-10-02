@@ -24,6 +24,4 @@ public class Proprietario {
     @Column
     private String telefone;
 
-    public Proprietario(){}
-
 }
