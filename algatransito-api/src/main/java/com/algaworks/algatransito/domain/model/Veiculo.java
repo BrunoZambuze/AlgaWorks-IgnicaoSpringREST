@@ -2,6 +2,7 @@ package com.algaworks.algatransito.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,7 +25,7 @@ public class Veiculo {
 
     @ManyToOne //Anotação que informa que muitos veiculos tem somente 1 proprietario
     @JoinColumn(name = "proprietario_id") //Especifica qual a coluna que faz o relacionamento com a tabela proprietario
-    @NotBlank
+    @NotNull
     private Proprietario proprietario;
 
     @Column
@@ -43,13 +44,13 @@ public class Veiculo {
     private String placa;
 
     @Column
-    @NotBlank
     @Enumerated(EnumType.STRING) //Essa anotação permite escolhermos se queremos retornar o numero do Enum ou o que está escrito no enum. Nesse caso
                                 //queremos as escritas "REGULAR" e "APREENDIDO"
+    @NotNull
     private StatusVeiculo status;
 
     @Column(name = "data_cadastro")
-    @NotBlank
+    @NotNull
     private LocalDateTime dataCadastro;
 
     @Column(name = "data_apreensao")

@@ -21,7 +21,7 @@ public class ProprietarioController {
     private final ProprietarioRepository proprietarioRepository;
 
     @GetMapping
-    public List<Proprietario> listarProprietarios(){
+    public List<Proprietario> listar(){
         /*
         Normalmente quando vamos utilizar uma interface, precisamos instanciar uma outra classe ou interface para poder
         utilizar a interface com a sua inplementação. Nesse caso, nós não precisamos fazer isso, pois o Spring Data JPA fornece

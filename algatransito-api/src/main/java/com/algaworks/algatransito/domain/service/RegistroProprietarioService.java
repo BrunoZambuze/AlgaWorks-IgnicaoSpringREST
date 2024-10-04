@@ -14,6 +14,12 @@ public class RegistroProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
 
+    public Proprietario encontreOuFalhe(Long proprietarioId){
+        return proprietarioRepository.findById(proprietarioId)
+                .orElseThrow(() -> new RegraDeNegocioException("Proprietário não encontrado!"));
+        //orElseThrow: Irá tentar "pegar" (.get) o valor do optional, no caso o proprietário, caso ele não consiga irá lançar uma exceção
+    }
+
     //Transactional possui 2 bibliotecas (Jakarta e SpringFramework), devemos escolher o SpringFramework
     @Transactional //Essa anotação informa que o método precisa ser executado dentro de uma transação, ou seja, caso algo dê errado no método, todas as
                   //Operações realizadas que envolvem banco de dados serão descartadas (Voltar ao que era antes)
