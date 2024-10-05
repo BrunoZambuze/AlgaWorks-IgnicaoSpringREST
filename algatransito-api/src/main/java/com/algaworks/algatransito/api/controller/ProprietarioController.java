@@ -70,9 +70,4 @@ public class ProprietarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(RegraDeNegocioException.class) //ExceptionHandler irá capturar e tratar todas as chamadas de uma exceção específica
-    public ResponseEntity<String> capturar(RegraDeNegocioException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }
