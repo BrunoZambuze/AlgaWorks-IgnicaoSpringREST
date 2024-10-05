@@ -34,7 +34,7 @@ public class VeiculoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Veiculo cadastrar(@RequestBody Veiculo veiculo){
+    public Veiculo cadastrar(@Valid @RequestBody Veiculo veiculo){
         return registroVeiculoService.cadastrar(veiculo);
     }
 

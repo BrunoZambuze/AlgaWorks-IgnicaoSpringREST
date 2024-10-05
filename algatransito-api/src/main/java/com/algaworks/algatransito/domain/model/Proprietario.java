@@ -1,9 +1,12 @@
 package com.algaworks.algatransito.domain.model;
 
+import com.algaworks.algatransito.domain.validation.ValidationGroups;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.groups.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +19,7 @@ import lombok.Setter;
 //@Table(name = "proprietario") Caso contrário, precisamos indicar qual a tabela que a classe Proprietario está sendo mapeada
 public class Proprietario {
 
+    @NotNull(groups = ValidationGroups.ProprietarioId.class) //Não vamos validar através do grupo Default, mas sim o Grupo do PriprietarioId
     @EqualsAndHashCode.Include //Explícitamente estou incluindo o atributo id no Equals/HashCode
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

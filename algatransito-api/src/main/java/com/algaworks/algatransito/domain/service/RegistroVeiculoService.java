@@ -6,7 +6,10 @@ import com.algaworks.algatransito.domain.model.StatusVeiculo;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import com.algaworks.algatransito.domain.repository.ProprietarioRepository;
 import com.algaworks.algatransito.domain.repository.VeiculoRepository;
+import com.algaworks.algatransito.domain.validation.ValidationGroups;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +23,9 @@ public class RegistroVeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final RegistroProprietarioService registroProprietarioService;
 
+
     @Transactional
-    public Veiculo cadastrar(@Valid Veiculo veiculo){
+    public Veiculo cadastrar(Veiculo veiculo){
 
         //Verificar que estamos criando um veiculo novo (Onde para criar esse veículo nós não precisamos pasasr o id no copor da requisição), caso
         //o veiculo tenha um id, quer dizer que estamos inserindo um veiculo já existente e não queremos isso
