@@ -26,10 +26,9 @@ public class Proprietario {
     private Long id;
 
     @Column
-     //Anotação do Jakarta Bean Validation que verifica se o objeto não é nulo, vazio, em branco, etc... Ele permite que não estoure uma exceção
+    @NotBlank //Anotação do Jakarta Bean Validation que verifica se o objeto não é nulo, vazio, em branco, etc... Ele permite que não estoure uma exceção
              //de integração com o banco de dados, pois no MySql as colunas são NotNull
     @Size(max = 60) //No banco de dados a coluna nome possui um limite de 60 caracteres, essa anotação vai validar se o nome tem a quantidade de caracteres necessário
-    @NotBlank
     private String nome;
 
     @Column
