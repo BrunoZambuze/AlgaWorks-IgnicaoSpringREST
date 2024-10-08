@@ -1,10 +1,15 @@
 package com.algaworks.algatransito.api.exceptionhandler;
 
 import com.algaworks.algatransito.domain.exception.RegraDeNegocioException;
+import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +17,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
 Explicação: Todo controlador precisa tratar as exceções e uma maneira de trata-las é utilizando o ExceptionHandler, que irá tratar uma exceção específica,
@@ -22,7 +29,11 @@ em um único ponto do código.
 
 @RestControllerAdvice //Permite o tratamento das exceções de maneira global em toda a aplicação independente de qual controlador que lançou a exception
                  //ResponseEntityExceptionHandler: Irá formatar a mensagem da exceção na resposta da requisição com base no RFC 7807 (Problem Detail)
+@AllArgsConstructor
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    //Precisamos dessa injeção para poder utilizar a mensagem customizada que criamos no "messages.properties"
+    private final MessageSource messageSource;
 
     /*
     Eplicação: Quando temos um erro de validação o @Valid irá lançar uma exceção MethodArgumentNotValidException, o @RestControllerAdvice irá capturar
@@ -39,9 +50,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // irá receber o BadRequest por padrão, vamos manter assim
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
 
-        //Agora que já temos nosso problem detail, vamos customizar as mensagens
+        //****** Agora que já temos nosso problem detail, vamos customizar as mensagens ******
         problemDetail.setTitle("Um ou mais campos estão inválidos");
         problemDetail.setType(URI.create("https://algatransito.com/erros/campos-invalidos")); //URI que nos ajuda a identificar a origem do erro
+
+        //****** Adicionando Campos Customizados no Problem File
+        //getAllErrors: Irá retornar uma lista com todos as propriedades(campos) que possuem algum erro
+        Map<String, String> fields = ex.getBindingResult().getAllErrors()
+                             .stream()
+                             .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField(),
+                                                      objectError -> messageSource.getMessage(objectError, LocaleContextHolder.getLocale())));
+                        //messageSource: Irá pegar a mensagem do erro do OjbjectError. Nesse momento o programa irá procurar o arquivo "messages.properties"
+                       //para alterar as mensagens padrões para as personalizadas
+        problemDetail.setProperty("invalidFields",fields);
 
         //Vamos fazer o método retornar handleExceptionInternal e passar a exceção que recebemos e o corpo da resposta da requisição, que no caso seria o
         //problemDetail customizado, de resto nós só passamos o restante dos argumentos
