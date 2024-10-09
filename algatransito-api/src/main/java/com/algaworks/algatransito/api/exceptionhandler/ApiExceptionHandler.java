@@ -4,10 +4,8 @@ import com.algaworks.algatransito.domain.exception.RegraDeNegocioException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,10 +52,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("Um ou mais campos estão inválidos");
         problemDetail.setType(URI.create("https://algatransito.com/erros/campos-invalidos")); //URI que nos ajuda a identificar a origem do erro
 
-        //****** Adicionando Campos Customizados no Problem File
+        //****** Adicionando Campos Customizados no Problem Detail
         //getAllErrors: Irá retornar uma lista com todos as propriedades(campos) que possuem algum erro
         Map<String, String> fields = ex.getBindingResult().getAllErrors()
-                             .stream()
+                             .stream()                  //getField: pegar o nome do campo
                              .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField(),
                                                       objectError -> messageSource.getMessage(objectError, LocaleContextHolder.getLocale())));
                         //messageSource: Irá pegar a mensagem do erro do OjbjectError. Nesse momento o programa irá procurar o arquivo "messages.properties"
@@ -70,8 +68,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RegraDeNegocioException.class)
-    public ResponseEntity<String> capturar(RegraDeNegocioException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ProblemDetail handleRegraDeNegocioException(RegraDeNegocioException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle(e.getMessage());
+        problemDetail.setType(URI.create("https://algatransito.com/erros/violacao-regra-de-negocio"));
+        return problemDetail;
+    }
+
+    //DataIntegrityViolationException: Quando estamos querendo remover um recurso que está sendo utilizado em outra tabela (fk_key)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problemDetail.setTitle("Recurso está em uso!");
+        problemDetail.setType(URI.create("https://algatransito.com/erros/conflito-de-recurso"));
+        return problemDetail;
     }
 
 }
