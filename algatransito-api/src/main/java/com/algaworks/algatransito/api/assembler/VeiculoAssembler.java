@@ -1,6 +1,7 @@
 package com.algaworks.algatransito.api.assembler;
 
 import com.algaworks.algatransito.api.representationmodel.VeiculoRepresentationModel;
+import com.algaworks.algatransito.api.representationmodel.input.VeiculoRepresentationInput;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,6 +14,10 @@ import java.util.List;
 public class VeiculoAssembler {
 
     private final ModelMapper modelMapper;
+
+    public Veiculo toVeiculo(VeiculoRepresentationInput veiculoInput){
+        return modelMapper.map(veiculoInput, Veiculo.class);
+    }
 
     public VeiculoRepresentationModel toRepresentationModel(Veiculo veiculo){
         return modelMapper.map(veiculo, VeiculoRepresentationModel.class);
