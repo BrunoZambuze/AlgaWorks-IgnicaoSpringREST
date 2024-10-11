@@ -1,5 +1,6 @@
 package com.algaworks.algatransito.api.controller;
 
+import com.algaworks.algatransito.api.assembler.VeiculoAssembler;
 import com.algaworks.algatransito.api.representationmodel.VeiculoRepresentationModel;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import com.algaworks.algatransito.domain.repository.VeiculoRepository;
@@ -21,8 +22,9 @@ public class VeiculoController {
 
     private final VeiculoRepository veiculoRepository;
     private final RegistroVeiculoService registroVeiculoService;
-    private final ModelMapper modelMapper; //<--- Responsável por mapear o domain model em um representation model (isso facilita para não precisar
-                                                                                                          //ficar repetindo códigos a cada método)
+    //Não é bom termos uma dependência direta do controller co mo ModelMapper, com isso, criamos a classe veiculoAssembler para poder fazer as transformações
+    //do domain model para o representation model
+    private final VeiculoAssembler veiculoAssembler;
     /*
     Explicação: Para utilizar o ModelMapper precisamos adicionar uma dependência no nosso maven no .xml, porém o Model Mapper NÃO é um componente
     do Spring, ou seja, ele não conseguirá injetar uma nova instância através do Lombok. Para resolver esse problema, criamos uma pasta "common" ou
@@ -32,25 +34,22 @@ public class VeiculoController {
 
     @GetMapping
     public List<VeiculoRepresentationModel> listar(){
-        return veiculoRepository.findAll()
-                                .stream()
-                                .map(veiculo -> modelMapper.map(veiculo, VeiculoRepresentationModel.class))
-                                .collect(Collectors.toList());
+        return veiculoAssembler.toCollectionRepresentationModel(veiculoRepository.findAll());
     }
 
     @GetMapping("/{veiculoId}")
     public ResponseEntity<VeiculoRepresentationModel> buscar(@PathVariable Long veiculoId){
         return veiculoRepository.findById(veiculoId)      //vamos estar mapeando o veiculo para uma nova instancia de VeiculoRepresentationModel
                                                          //já com todas as propriedades preenchidas
-                                .map(veiculo -> modelMapper.map(veiculo, VeiculoRepresentationModel.class))
+                                .map(veiculo -> veiculoAssembler.toRepresentationModel(veiculo))
                                 .map(v -> ResponseEntity.ok(v))
                                 .orElse(ResponseEntity.notFound().build());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Veiculo cadastrar(@Valid @RequestBody Veiculo veiculo){
-        return registroVeiculoService.cadastrar(veiculo);
+    public VeiculoRepresentationModel cadastrar(@Valid @RequestBody Veiculo veiculo){
+        return veiculoAssembler.toRepresentationModel(registroVeiculoService.cadastrar(veiculo));
     }
 
 }
