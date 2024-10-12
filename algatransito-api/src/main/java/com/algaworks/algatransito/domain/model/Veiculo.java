@@ -14,8 +14,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -80,5 +81,15 @@ public class Veiculo {
     @Column(name = "data_apreensao")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataApreensao;
+
+    @OneToMany(mappedBy = "veiculo") //Indicar o nome da propriedade da classe Autuacao que faz relacionamento com a clase Veiculo
+    private List<Autuacao> autuacoes = new ArrayList<>();
+
+    public Autuacao adicionarAutuacao(Autuacao autuacao){
+        autuacao.setDataAutuacao(OffsetDateTime.now());
+        autuacao.setVeiculo(this);
+        this.getAutuacoes().add(autuacao);
+        return autuacao;
+    }
 
 }

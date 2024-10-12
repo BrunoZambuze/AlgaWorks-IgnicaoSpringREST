@@ -1,20 +1,18 @@
 package com.algaworks.algatransito.api.controller;
 
 import com.algaworks.algatransito.api.assembler.VeiculoAssembler;
-import com.algaworks.algatransito.api.representationmodel.VeiculoRepresentationModel;
+import com.algaworks.algatransito.api.representationmodel.output.VeiculoRepresentationModel;
 import com.algaworks.algatransito.api.representationmodel.input.VeiculoRepresentationInput;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import com.algaworks.algatransito.domain.repository.VeiculoRepository;
 import com.algaworks.algatransito.domain.service.RegistroVeiculoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RequestMapping("/veiculos") //Irá informar que todos os endpoints desse controlodar começará com /veiculos

@@ -1,6 +1,6 @@
 package com.algaworks.algatransito.common;
 
-import com.algaworks.algatransito.api.representationmodel.VeiculoRepresentationModel;
+import com.algaworks.algatransito.api.representationmodel.output.VeiculoRepresentationModel;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

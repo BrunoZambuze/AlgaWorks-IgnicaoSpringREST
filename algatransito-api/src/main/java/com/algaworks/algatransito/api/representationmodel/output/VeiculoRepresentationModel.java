@@ -1,4 +1,4 @@
-package com.algaworks.algatransito.api.representationmodel;
+package com.algaworks.algatransito.api.representationmodel.output;
 
 
 import com.algaworks.algatransito.domain.model.StatusVeiculo;

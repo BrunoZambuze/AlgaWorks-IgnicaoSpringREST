@@ -1,4 +1,4 @@
-package com.algaworks.algatransito.api.representationmodel;
+package com.algaworks.algatransito.api.representationmodel.output;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.algaworks.algatransito.api.assembler;
 
-import com.algaworks.algatransito.api.representationmodel.VeiculoRepresentationModel;
+import com.algaworks.algatransito.api.representationmodel.output.VeiculoRepresentationModel;
 import com.algaworks.algatransito.api.representationmodel.input.VeiculoRepresentationInput;
 import com.algaworks.algatransito.domain.model.Veiculo;
 import lombok.AllArgsConstructor;
