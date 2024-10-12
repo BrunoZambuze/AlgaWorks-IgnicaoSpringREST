@@ -36,6 +36,6 @@ public class Autuacao {
 
     @Column
     @NotNull
-    private OffsetDateTime dataAutuacao;
+    private OffsetDateTime dataOcorrencia;
 
 }

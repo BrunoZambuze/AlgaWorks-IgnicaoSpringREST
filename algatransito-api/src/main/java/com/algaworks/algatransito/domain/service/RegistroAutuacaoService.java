@@ -10,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class RegistroAutuacaoService {
 
-    private RegistroVeiculoService registroVeiculoService;
+    private final RegistroVeiculoService registroVeiculoService;
 
     @Transactional
     public Autuacao registrar(Long veiculoId, Autuacao novaAutuacao){
         Veiculo novoVeiculo = registroVeiculoService.buscar(veiculoId);
-        return novoVeiculo.adicionarAutuacao(novaAutuacao);
+        return novoVeiculo.adicionarAutuacao(novaAutuacao); //Como estamos em um contexto transacional, o Spring irá fazer uma "persistência automática" no banco de dados
+                                                           //sempre que for detectada alguma modificação... Por isso não precisamos criar um repositório de Autuacao.
+
+                                                          //"Qualquer alteração será sincronizada automaticamente com o banco de dados ao final da transação,
+                                                         //sem necessidade de chamar métodos explícitos de repositório para salvar"
     }
 
 }

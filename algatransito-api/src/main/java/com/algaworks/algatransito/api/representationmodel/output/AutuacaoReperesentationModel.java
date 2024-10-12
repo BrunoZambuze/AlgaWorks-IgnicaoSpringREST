@@ -13,6 +13,6 @@ public class AutuacaoReperesentationModel {
     private Long id;
     private String descricao;
     private BigDecimal valorMulta;
-    private OffsetDateTime dataAutuacao;
+    private OffsetDateTime dataOcorrencia;
 
 }

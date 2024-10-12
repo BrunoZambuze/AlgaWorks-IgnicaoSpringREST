@@ -82,11 +82,11 @@ public class Veiculo {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataApreensao;
 
-    @OneToMany(mappedBy = "veiculo") //Indicar o nome da propriedade da classe Autuacao que faz relacionamento com a clase Veiculo
+    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL) //Indicar o nome da propriedade da classe Autuacao que faz relacionamento com a clase Veiculo
     private List<Autuacao> autuacoes = new ArrayList<>();
 
     public Autuacao adicionarAutuacao(Autuacao autuacao){
-        autuacao.setDataAutuacao(OffsetDateTime.now());
+        autuacao.setDataOcorrencia(OffsetDateTime.now());
         autuacao.setVeiculo(this);
         this.getAutuacoes().add(autuacao);
         return autuacao;
