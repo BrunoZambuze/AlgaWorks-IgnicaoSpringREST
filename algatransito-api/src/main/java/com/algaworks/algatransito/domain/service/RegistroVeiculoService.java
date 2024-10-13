@@ -1,5 +1,6 @@
 package com.algaworks.algatransito.domain.service;
 
+import com.algaworks.algatransito.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algatransito.domain.exception.RegraDeNegocioException;
 import com.algaworks.algatransito.domain.model.Proprietario;
 import com.algaworks.algatransito.domain.model.StatusVeiculo;
@@ -25,7 +26,7 @@ public class RegistroVeiculoService {
     private final RegistroProprietarioService registroProprietarioService;
 
     public Veiculo buscar(Long veiculoId){
-        return veiculoRepository.findById(veiculoId).orElseThrow(() -> new RegraDeNegocioException("Não foi encontrado nenhum veículo!"));
+        return veiculoRepository.findById(veiculoId).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi encontrado nenhum veículo!"));
     }
 
     @Transactional

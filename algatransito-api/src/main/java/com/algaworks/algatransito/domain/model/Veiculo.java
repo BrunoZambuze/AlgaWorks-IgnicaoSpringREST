@@ -1,5 +1,6 @@
 package com.algaworks.algatransito.domain.model;
 
+import com.algaworks.algatransito.domain.exception.RegraDeNegocioException;
 import com.algaworks.algatransito.domain.validation.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -82,14 +83,41 @@ public class Veiculo {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataApreensao;
 
-    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL) //Indicar o nome da propriedade da classe Autuacao que faz relacionamento com a clase Veiculo
+    //CascadeType.ALL: Quando você salva (persiste) um Veiculo que possui autuações associadas, todas as Autuacao na lista também serão salvas automaticamente.
+    //mappedBy: Indicar o nome da propriedade da classe Autuacao que faz relacionamento (Foreign key) com a clase Veiculo
+    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
     private List<Autuacao> autuacoes = new ArrayList<>();
 
     public Autuacao adicionarAutuacao(Autuacao autuacao){
         autuacao.setDataOcorrencia(OffsetDateTime.now());
         autuacao.setVeiculo(this);
-        this.getAutuacoes().add(autuacao);
+        this.getAutuacoes().add(autuacao); //Precisamos adicionar na lista para que o JPA deixe essa persistencia automática como "pendente" por conta do Cascade,
+                                          //e só será realmente persistido quando finaliar a transanção do método (registrar) localizado no Service
         return autuacao;
+    }
+
+    public void apreender(){
+        if(estaApreendido()){
+            throw new RegraDeNegocioException("Veículo já se enconta apreendido!");
+        }
+        setStatus(StatusVeiculo.APREENDIDO);
+        setDataApreensao(OffsetDateTime.now());
+    }
+
+    public void removerApreensao(){
+        if(naoEstaApreendido()){
+            throw new RegraDeNegocioException("Veículo não está apreendido!");
+        }
+        setStatus(StatusVeiculo.REGULAR);
+        setDataApreensao(null);
+    }
+
+    private boolean estaApreendido(){
+        return StatusVeiculo.APREENDIDO.equals(this.getStatus());
+    }
+
+    private boolean naoEstaApreendido(){
+        return !estaApreendido();
     }
 
 }

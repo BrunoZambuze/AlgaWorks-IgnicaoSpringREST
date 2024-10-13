@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 @Setter
 public class AutuacaoReperesentationModel {
 
+    private VeiculoResumoModel veiculo;
     private Long id;
     private String descricao;
     private BigDecimal valorMulta;
